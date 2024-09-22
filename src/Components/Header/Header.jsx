@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { IoIosSearch } from "react-icons/io";
 import { SlLocationPin } from "react-icons/sl";
 import { MdAddShoppingCart } from "react-icons/md";
@@ -6,11 +6,14 @@ import {Link} from 'react-router-dom'
 
 import classes from './Header.module.css'
 import LowerHeader from './LowerHeader';
+import { DataContext } from '../DataProvider/DataProvider';
+
 
 
 function Header() {
+  const [{basket},dispatch]=useContext(DataContext)
   return (
-    <>
+    <section className={classes.fixed}>
       <section>
         <div className={classes.header_container}>
           {/* logo section*/}
@@ -66,13 +69,13 @@ function Header() {
             {/* cart */}
             <Link to="/cart" className={classes.cart}>
               <MdAddShoppingCart />
-              <span>0</span>
+              <span>{basket.length}</span>
             </Link>
           </div>
         </div>
       </section>
       <LowerHeader/>
-    </>
+    </section>
   );
 }
 
