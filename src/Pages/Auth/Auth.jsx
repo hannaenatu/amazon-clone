@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import classes from "./SignUp.module.css";
 import LayOut from "../../Components/LayOut/LayOut";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../Utility/firebase";
 import {
   signInWithEmailAndPassword,
@@ -16,53 +16,53 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState({
-    signIn:false,
-    signUp:false
-  })
+    signIn: false,
+    signUp: false,
+  });
 
+  const [{ user }, dispatch] = useContext(DataContext);
+  const navigate = useNavigate()
 
-
-
-  const [{ user }, dispatch] = useContext(DataContext)
-  console.log(user)
+  // console.log(user);
 
   const authHandler = async (e) => {
     e.preventDefault();
-    console.log(e.target.name)
+    console.log(e.target.name);
     if (e.target.name == "signin") {
       //firebase auth
-      setLoading({...loading, signIn:true})
+      setLoading({ ...loading, signIn: true });
 
       console.log(password, email);
       signInWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
           // console.log(userInfo);
           dispatch({
-            type:Type.SET_USER,
-            user:userInfo.user,
-             
-          })
-           serLoading({...loading, signIn:false})
+            type: Type.SET_USER,
+            user: userInfo.user,
+          });
+          setLoading({ ...loading, signIn: false });
+          navigate("/")
         })
         .catch((err) => {
-          setError(err.message)
-           serLoading({ ...loading, signIn: f });
+          setError(err.message);
+          setLoading({ ...loading, signIn: false });
         });
     } else {
-       setLoading({ ...loading, signIn: true });
+      setLoading({ ...loading, signIn: true });
       createUserWithEmailAndPassword(auth, email, password)
         .then((userInfo) => {
-           serLoading({ ...loading, signUp: true });
+          // setLoading({ ...loading, signUp: true });
           // console.log(userInfo);
           dispatch({
-            type:Type.SET_USER,
-            user:userInfo.user,
+            type: Type.SET_USER,
+            user: userInfo.user,
           });
-           serLoading({ ...loading, signIn: false });
+          setLoading({ ...loading, signUp: false });
+           navigate("/");
         })
         .catch((err) => {
-         setError(err.message);
-          serLoading({ ...loading, signIn: false });
+          setError(err.message);
+          setLoading({ ...loading, signUp: false });
         });
     }
   };
@@ -106,12 +106,12 @@ function Auth() {
             onClick={authHandler}
             name="signin"
             className={classes.login_signInButton}
-          >{
-            loading.signIn ? ( <ClipLoader color="#000" size={15}></ClipLoader>
-            ) :(
+          >
+            {loading.signIn ? (
+              <ClipLoader color="#000" size={15}></ClipLoader>
+            ) : (
               "Sign In"
-            )
-          }
+            )}
             {/* Sign In{" "} */}
           </button>
         </form>
@@ -128,9 +128,16 @@ function Auth() {
           onClick={authHandler}
           className={classes.login_registerButton}
         >
-          Create your Amazon Account
+          {loading.signUp ? (
+            <ClipLoader color="#000" size={15}></ClipLoader>
+          ) : (
+            " Create Your Amazon Account"
+          )}
+          {/* Create your Amazon Account */}
         </button>
-      {error && <small style={{paddingTop:"5px", color:"red"}}>{error}</small>}
+        {error && (
+          <small style={{ paddingTop: "5px", color: "red" }}>{error}</small>
+        )}
       </div>
     </section>
   );
