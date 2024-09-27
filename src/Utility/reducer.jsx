@@ -52,6 +52,13 @@ export const reducer = (state, action) => {
         basket: newBasket,
       };
 
+    case Type.EMPTY_BASKET:
+      //to empty the basket after order is placed
+      return {
+        ...state,
+        basket: [],
+      };
+
     case Type.SET_USER:
       return {
         ...state,

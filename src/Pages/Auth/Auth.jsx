@@ -70,7 +70,7 @@ function Auth() {
   return (
     <section className={classes.login}>
       {/* logo */}
-      <Link>
+      <Link to={"/"}>
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
           alt=""
